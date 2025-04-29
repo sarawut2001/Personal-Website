@@ -24,8 +24,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function showSection(sectionId) {
         sections.forEach(section => {
             section.classList.remove('active');
+            section.style.opacity = '0';
         });
-        document.getElementById(sectionId).classList.add('active');
+        const targetSection = document.getElementById(sectionId);
+        targetSection.classList.add('active');
+        setTimeout(() => {
+            targetSection.style.opacity = '1';
+            // Trigger slide-in animations for skill and project cards
+            triggerAnimations(targetSection);
+        }, 10);
     }
     
     // Skills tabs
@@ -43,9 +50,25 @@ document.addEventListener('DOMContentLoaded', function() {
             skillContents.forEach(content => {
                 content.style.display = 'none';
             });
-            document.getElementById(targetId).style.display = 'block';
+            const targetContent = document.getElementById(targetId);
+            targetContent.style.display = 'block';
+            // Trigger slide-in animations for skill cards
+            triggerAnimations(targetContent);
         });
     });
+
+    // Function to trigger slide-in animations
+    function triggerAnimations(container) {
+        const animatableElements = container.querySelectorAll('[data-animate]');
+        animatableElements.forEach((el, index) => {
+            setTimeout(() => {
+                el.classList.add('animate');
+            }, index * 100); // Stagger animations
+        });
+    }
+
+    // Trigger animations on page load for visible section
+    triggerAnimations(document.querySelector('.section.active'));
 
     // Contact form submission
     const contactForm = document.getElementById('contactForm');
@@ -74,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             
             // Send email using EmailJS
-            // Replace YOUR_SERVICE_ID and YOUR_TEMPLATE_ID with your actual EmailJS service and template IDs
             emailjs.send('service_ng1jrnl', 'template_w1g49xg', templateParams)
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
